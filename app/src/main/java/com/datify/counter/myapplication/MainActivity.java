@@ -72,12 +72,12 @@ public class MainActivity extends ListActivity {
 
             HttpClient httpclient = new DefaultHttpClient(params);
             Log.d("Console", "DefaultHttpClient OK");
-            HttpPost httppost = new HttpPost("172.26.9.205:9393/time");
+            HttpPost httppost = new HttpPost("http://172.26.9.205:9393/time");
             Log.d("Console", "HttpPost OK");
 
             try {
                 // Add your data
-                List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+                List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(3);
                 nameValuePairs.add(new BasicNameValuePair("start_date", "12345"));
                 nameValuePairs.add(new BasicNameValuePair("end_date", "AndDev is Cool!"));
                 nameValuePairs.add(new BasicNameValuePair("collection_id", "f4rgtrh5"));
