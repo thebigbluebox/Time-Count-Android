@@ -17,7 +17,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Timer"
+            android:name=".TimerActivity"
             android:label="@string/title_activity_timer"
             android:parentActivityName=".MainActivity" >
             <meta-data
