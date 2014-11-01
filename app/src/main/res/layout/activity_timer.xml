@@ -14,18 +14,18 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:textSize="42sp"
-        android:textColor="#990033"/>
+        android:textColor="#990033"
+        android:id="@+id/textView" />
 
     <TextView
     android:id="@+id/timerValue"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_above="@+id/pauseButton"
-    android:layout_centerHorizontal="true"
-    android:layout_marginBottom="37dp"
-    android:textSize="40sp"
-    android:textColor="#ffffff"
-    android:text="@string/timerVal" />
+        android:textSize="40sp"
+    android:textColor="#222222"
+    android:text="@string/timerVal"
+        android:layout_below="@+id/textView"
+        android:layout_centerHorizontal="true" />
 
     <Button
     android:id="@+id/startButton"
@@ -37,16 +37,22 @@
     android:text="@string/startButtonLabel" />
 
     <Button
-    android:id="@+id/pauseButton"
-    android:layout_width="90dp"
-    android:layout_height="45dp"
-    android:layout_alignBaseline="@+id/startButton"
-    android:layout_alignBottom="@+id/startButton"
-    android:layout_alignParentRight="true"
-    android:layout_marginRight="38dp"
-    android:text="@string/pauseButtonLabel" />
+        android:id="@+id/pauseButton"
+        android:layout_width="90dp"
+        android:layout_height="45dp"
+        android:layout_alignBaseline="@+id/startButton"
+        android:layout_marginLeft="135dp"
+        android:text="@string/pauseButtonLabel" />
 
-
+    <Button
+        android:id="@+id/saveButton"
+        android:layout_width="90dp"
+        android:layout_height="45dp"
+        android:layout_alignBaseline="@+id/startButton"
+        android:layout_alignBottom="@+id/startButton"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="38dp"
+        android:text="@string/saveButtonLabel" />
 
 
 </RelativeLayout>

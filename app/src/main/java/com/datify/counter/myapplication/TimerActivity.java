@@ -31,6 +31,7 @@ public class TimerActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_timer);
 
+
         timerValue = (TextView) findViewById(R.id.timerValue);
 
         startButton = (Button) findViewById(R.id.startButton);
