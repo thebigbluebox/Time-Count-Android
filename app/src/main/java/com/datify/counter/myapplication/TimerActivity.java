@@ -4,17 +4,30 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.ByteArrayEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
+
+import java.util.Calendar;
+
 
 public class TimerActivity extends Activity {
 
     private Button startButton;
     private Button pauseButton;
+    private Button saveButton;
 
     private TextView timerValue;
 
@@ -26,10 +39,13 @@ public class TimerActivity extends Activity {
     long timeSwapBuff = 0L;
     long updatedTime = 0L;
 
+
+    private Calendar currentDate;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_timer);
+
 
 
         timerValue = (TextView) findViewById(R.id.timerValue);
@@ -41,7 +57,13 @@ public class TimerActivity extends Activity {
             public void onClick(View view) {
                 startTime = SystemClock.uptimeMillis();
                 customHandler.postDelayed(updateTimerThread, 0);
-
+                currentDate = Calendar.getInstance();
+                try {
+                    post();
+                }
+                catch(Exception e) {
+                    Log.d("Console", "Exception on start post");
+                }
             }
         });
 
@@ -53,7 +75,21 @@ public class TimerActivity extends Activity {
 
                 timeSwapBuff += timeInMilliseconds;
                 customHandler.removeCallbacks(updateTimerThread);
+            }
+        });
 
+        saveButton = (Button) findViewById(R.id.saveButton);
+
+        saveButton.setOnClickListener(new View.OnClickListener() {
+
+            public void onClick(View view) {
+            currentDate = Calendar.getInstance();
+                try {
+                    post();
+                }
+                catch(Exception e) {
+                    Log.d("Console", "Exception on save post");
+                }
             }
         });
     }
@@ -72,6 +108,25 @@ public class TimerActivity extends Activity {
             customHandler.postDelayed(this, 0);
         }
     };
+
+    private void post() throws Exception
+    {
+        //Log.d("Console", currentDate.toString());
+
+        Log.d("Console", "Post entered");
+        int TIMEOUT_MILLISEC = 10000;  // = 10 seconds
+        HttpParams httpParams = new BasicHttpParams();
+        HttpConnectionParams.setConnectionTimeout(httpParams, TIMEOUT_MILLISEC);
+        HttpConnectionParams.setSoTimeout(httpParams, TIMEOUT_MILLISEC);
+        HttpClient client = new DefaultHttpClient(httpParams);
+
+        HttpPost request = new HttpPost("");
+        request.setEntity(new ByteArrayEntity(
+                currentDate.toString().getBytes("UTF8")));
+        HttpResponse response = client.execute(request);
+        Log.d("Console", "Post exited");
+        Log.d("Console", response.toString());
+    }
 
 
     @Override
