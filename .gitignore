@@ -36,3 +36,7 @@ Thumbs.db
 #.idea/workspace.xml - remove # and delete .idea if it better suit your needs.
 .gradle
 build/
+.gradle/2.1/taskArtifacts/cache.properties.lock
+.idea/workspace.xml
+*.lock
+.gradle/2.1/taskArtifacts/cache.properties.lock
