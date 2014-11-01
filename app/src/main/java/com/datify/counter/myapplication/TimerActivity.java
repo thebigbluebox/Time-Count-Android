@@ -12,15 +12,22 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 
 public class TimerActivity extends Activity {
@@ -113,19 +120,41 @@ public class TimerActivity extends Activity {
     {
         //Log.d("Console", currentDate.toString());
 
-        Log.d("Console", "Post entered");
+        Log.d("Console", "Post entered");/*
         int TIMEOUT_MILLISEC = 10000;  // = 10 seconds
         HttpParams httpParams = new BasicHttpParams();
         HttpConnectionParams.setConnectionTimeout(httpParams, TIMEOUT_MILLISEC);
         HttpConnectionParams.setSoTimeout(httpParams, TIMEOUT_MILLISEC);
         HttpClient client = new DefaultHttpClient(httpParams);
-
-        HttpPost request = new HttpPost("");
+        Log.d("Console", "Before request");
+        HttpPost request = new HttpPost("172.26.9.205:9393/time");
         request.setEntity(new ByteArrayEntity(
                 currentDate.toString().getBytes("UTF8")));
-        HttpResponse response = client.execute(request);
+        HttpResponse response = client.execute(request);*/
+        HttpClient httpclient = new DefaultHttpClient();
+        HttpPost httppost = new HttpPost("172.26.9.205:9393/time");
+
+        try {
+            // Add your data
+            List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+            nameValuePairs.add(new BasicNameValuePair("start_date", "12345"));
+            nameValuePairs.add(new BasicNameValuePair("end_date", "AndDev is Cool!"));
+            nameValuePairs.add(new BasicNameValuePair("collection_id", "f4rgtrh5"));
+            httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+
+            // Execute HTTP Post Request
+            HttpResponse response = httpclient.execute(httppost);
+
+        } catch (ClientProtocolException e) {
+            // TODO Auto-generated catch block
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+        }
+
+
         Log.d("Console", "Post exited");
-        Log.d("Console", response.toString());
+
+
     }
 
 
