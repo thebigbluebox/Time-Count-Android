@@ -27,7 +27,7 @@
         <activity
             android:name=".ResultActivity"
             android:label="@string/title_activity_result"
-            android:partentActivityName = ".MainActivity">
+            android:parentActivityName = ".MainActivity">
             <meta-data
                 android:name = "android.support.PARENT_ACTIVITY"
                 android:value = "com.datify.counter.myapplication.MainActivity" />
