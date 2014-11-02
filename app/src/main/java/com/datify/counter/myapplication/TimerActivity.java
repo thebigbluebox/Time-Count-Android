@@ -1,6 +1,8 @@
 package com.datify.counter.myapplication;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
@@ -12,6 +14,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import org.apache.http.HttpResponse;
+import org.apache.http.HttpVersion;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
@@ -21,6 +24,7 @@ import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.CoreProtocolPNames;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 
@@ -46,8 +50,8 @@ public class TimerActivity extends Activity {
     long timeSwapBuff = 0L;
     long updatedTime = 0L;
 
-
-    private Calendar currentDate;
+    private Calendar startDate;
+    private Calendar endDate;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,13 +68,7 @@ public class TimerActivity extends Activity {
             public void onClick(View view) {
                 startTime = SystemClock.uptimeMillis();
                 customHandler.postDelayed(updateTimerThread, 0);
-                currentDate = Calendar.getInstance();
-                try {
-                    post();
-                }
-                catch(Exception e) {
-                    Log.d("Console", "Exception on start post");
-                }
+                startDate = Calendar.getInstance();
             }
         });
 
@@ -90,15 +88,67 @@ public class TimerActivity extends Activity {
         saveButton.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View view) {
-            currentDate = Calendar.getInstance();
-                try {
-                    post();
-                }
-                catch(Exception e) {
-                    Log.d("Console", "Exception on save post");
-                }
+            endDate = Calendar.getInstance();
+            new MyHttpPost().execute();
             }
         });
+    }
+
+    @Override
+    public void onBackPressed()
+    {
+        super.onBackPressed();
+        startActivity(new Intent(TimerActivity.this, MainActivity.class));
+        finish();
+
+    }
+
+
+
+    private class MyHttpPost extends AsyncTask<String, Void, Boolean>
+    {
+        @Override
+        protected Boolean doInBackground(String... arg0) {
+            Log.d("Console", "Post entered");
+
+            HttpParams params = new BasicHttpParams();
+            Log.d("Console", "HttpParams OK");
+            params.setParameter(CoreProtocolPNames.PROTOCOL_VERSION,
+                    HttpVersion.HTTP_1_1);
+            Log.d("Console", "Param setup OK");
+
+            HttpClient httpclient = new DefaultHttpClient(params);
+            Log.d("Console", "DefaultHttpClient OK");
+            HttpPost httppost = new HttpPost("http://172.26.9.205:9393/time");
+            Log.d("Console", "HttpPost OK");
+
+            try {
+                // Add your data
+                List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(3);
+                Log.d("Console", "Start Date: " + startDate.getTime().toString());
+                Log.d("Console", "End Date: " + endDate.getTime().toString());
+                nameValuePairs.add(new BasicNameValuePair("start_date", startDate.getTime().toString()));
+                nameValuePairs.add(new BasicNameValuePair("end_date", endDate.getTime().toString()));
+                nameValuePairs.add(new BasicNameValuePair("collection_id", "1"));
+                httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs, "utf-8"));
+                Log.d("Console", "UTF Encoding OK");
+                Log.d("Console", "Start Date: " + startDate.getTime().toString());
+                Log.d("Console", "End Date: " + endDate.getTime().toString());
+                // Execute HTTP Post Request
+                HttpResponse response = httpclient.execute(httppost);
+
+            } catch (ClientProtocolException e) {
+                // TODO Auto-generated catch block
+                Log.d("Console", "ClientProtocolException");
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                Log.d("Console", "IOException");
+            }
+
+
+            Log.d("Console", "Post exited");
+            return true;
+        }
     }
 
     private Runnable updateTimerThread = new Runnable() {
@@ -116,46 +166,7 @@ public class TimerActivity extends Activity {
         }
     };
 
-    private void post() throws Exception
-    {
-        //Log.d("Console", currentDate.toString());
 
-        Log.d("Console", "Post entered");/*
-        int TIMEOUT_MILLISEC = 10000;  // = 10 seconds
-        HttpParams httpParams = new BasicHttpParams();
-        HttpConnectionParams.setConnectionTimeout(httpParams, TIMEOUT_MILLISEC);
-        HttpConnectionParams.setSoTimeout(httpParams, TIMEOUT_MILLISEC);
-        HttpClient client = new DefaultHttpClient(httpParams);
-        Log.d("Console", "Before request");
-        HttpPost request = new HttpPost("172.26.9.205:9393/time");
-        request.setEntity(new ByteArrayEntity(
-                currentDate.toString().getBytes("UTF8")));
-        HttpResponse response = client.execute(request);*/
-        HttpClient httpclient = new DefaultHttpClient();
-        HttpPost httppost = new HttpPost("172.26.9.205:9393/time");
-
-        try {
-            // Add your data
-            List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-            nameValuePairs.add(new BasicNameValuePair("start_date", "12345"));
-            nameValuePairs.add(new BasicNameValuePair("end_date", "AndDev is Cool!"));
-            nameValuePairs.add(new BasicNameValuePair("collection_id", "f4rgtrh5"));
-            httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-
-            // Execute HTTP Post Request
-            HttpResponse response = httpclient.execute(httppost);
-
-        } catch (ClientProtocolException e) {
-            // TODO Auto-generated catch block
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-        }
-
-
-        Log.d("Console", "Post exited");
-
-
-    }
 
 
     @Override
@@ -171,9 +182,16 @@ public class TimerActivity extends Activity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
+        if(id == android.R.id.home)
+        {
+            startActivity(new Intent(TimerActivity.this, MainActivity.class));
+            finish();
+            return true;
+        }
         if (id == R.id.action_settings) {
             return true;
         }
+
         return super.onOptionsItemSelected(item);
     }
 }
