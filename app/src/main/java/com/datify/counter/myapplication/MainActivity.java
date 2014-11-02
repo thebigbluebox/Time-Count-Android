@@ -27,23 +27,26 @@ import org.apache.http.params.HttpParams;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 
-public class MainActivity extends ListActivity {
 
+public class MainActivity extends ListActivity {
+    private Calendar currentDate;
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
-        String[] values = new String[] { "Android", "iPhone", "WindowsMobile",
-                "Blackberry", "WebOS", "Ubuntu", "Windows7", "Max OS X",
-                "Linux", "OS/2" };
+        String[] values = new String[] { "Bus Times", "Study Times", "General",
+                "Commute", "Cycling", "Sprinting", "Swimming", "TV",
+                "Performance", "Other" };
         // use your custom layout
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
                 R.layout.rowlayout, R.id.label, values);
         setListAdapter(adapter);
 
-        new MyHttpPost().execute();
+
+
     }
 
     //DELETE THIS -- TEMPORARY JSON TEST
@@ -52,17 +55,7 @@ public class MainActivity extends ListActivity {
         //Log.d("Console", currentDate.toString());
         @Override
         protected Boolean doInBackground(String... arg0) {
-            Log.d("Console", "Post entered");/*
-        int TIMEOUT_MILLISEC = 10000;  // = 10 seconds
-        HttpParams httpParams = new BasicHttpParams();
-        HttpConnectionParams.setConnectionTimeout(httpParams, TIMEOUT_MILLISEC);
-        HttpConnectionParams.setSoTimeout(httpParams, TIMEOUT_MILLISEC);
-        HttpClient client = new DefaultHttpClient(httpParams);
-        Log.d("Console", "Before request");
-        HttpPost request = new HttpPost("172.26.9.205:9393/time");
-        request.setEntity(new ByteArrayEntity(
-                currentDate.toString().getBytes("UTF8")));
-        HttpResponse response = client.execute(request);*/
+            Log.d("Console", "Post entered");
 
             HttpParams params = new BasicHttpParams();
             Log.d("Console", "HttpParams OK");
@@ -78,9 +71,9 @@ public class MainActivity extends ListActivity {
             try {
                 // Add your data
                 List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(3);
-                nameValuePairs.add(new BasicNameValuePair("start_date", "12345"));
-                nameValuePairs.add(new BasicNameValuePair("end_date", "AndDev is Cool!"));
-                nameValuePairs.add(new BasicNameValuePair("collection_id", "f4rgtrh5"));
+                nameValuePairs.add(new BasicNameValuePair("start_date", currentDate.getTime().toString()));
+                nameValuePairs.add(new BasicNameValuePair("end_date", currentDate.getTime().toString()));
+                nameValuePairs.add(new BasicNameValuePair("collection_id", "1"));
                 httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs, "utf-8"));
 
                 // Execute HTTP Post Request
@@ -104,6 +97,10 @@ public class MainActivity extends ListActivity {
     protected void onListItemClick(ListView l, View v, int position, long id) {
         String item = (String) getListAdapter().getItem(position);
         Toast.makeText(this, item + " selected", Toast.LENGTH_LONG).show();
+        currentDate = Calendar.getInstance();
+        Log.d("Console", "Before currentDate string");
+        Log.d("Console", currentDate.getTime().toString());
+        new MyHttpPost().execute();
     }
 
 
