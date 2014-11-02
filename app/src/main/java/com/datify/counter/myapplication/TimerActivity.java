@@ -52,13 +52,17 @@ public class TimerActivity extends Activity {
 
     private Calendar startDate;
     private Calendar endDate;
+    private String index = "";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_timer);
+        Bundle extras = getIntent().getExtras();
 
-
-
+        if (extras != null) { //intent was sent properly with index info
+            index = extras.getString("Index"); //get index info from the intent
+        }
+        Log.d("Console",index);
         timerValue = (TextView) findViewById(R.id.timerValue);
 
         startButton = (Button) findViewById(R.id.startButton);
@@ -125,15 +129,15 @@ public class TimerActivity extends Activity {
             try {
                 // Add your data
                 List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(3);
-                Log.d("Console", "Start Date: " + startDate.getTime().toString());
-                Log.d("Console", "End Date: " + endDate.getTime().toString());
+                //Log.d("Console", "Start Date: " + startDate.getTime().toString());
+                //Log.d("Console", "End Date: " + endDate.getTime().toString());
                 nameValuePairs.add(new BasicNameValuePair("start_date", startDate.getTime().toString()));
                 nameValuePairs.add(new BasicNameValuePair("end_date", endDate.getTime().toString()));
-                nameValuePairs.add(new BasicNameValuePair("collection_id", "1"));
+                nameValuePairs.add(new BasicNameValuePair("collection_id", index));
                 httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs, "utf-8"));
-                Log.d("Console", "UTF Encoding OK");
-                Log.d("Console", "Start Date: " + startDate.getTime().toString());
-                Log.d("Console", "End Date: " + endDate.getTime().toString());
+                //Log.d("Console", "UTF Encoding OK");
+                //Log.d("Console", "Start Date: " + startDate.getTime().toString());
+                //Log.d("Console", "End Date: " + endDate.getTime().toString());
                 // Execute HTTP Post Request
                 HttpResponse response = httpclient.execute(httppost);
 

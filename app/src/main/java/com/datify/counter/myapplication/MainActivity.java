@@ -5,6 +5,7 @@ import android.app.ListActivity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Debug;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -32,7 +33,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-
+import java.util.Objects;
 
 
 public class MainActivity extends ListActivity {
@@ -101,9 +102,14 @@ public class MainActivity extends ListActivity {
         String item = (String) getListAdapter().getItem(position);
         Toast.makeText(this, item + " selected", Toast.LENGTH_LONG).show();
         currentDate = Calendar.getInstance();
-        Log.d("Console", "Before currentDate string");
-        Log.d("Console", currentDate.getTime().toString());
-        new MyHttpPost().execute();
+        //Log.d("Console", "Before currentDate string");
+        //Log.d("Console", currentDate.getTime().toString());
+        //new MyHttpPost().execute();
+
+        String index = Long.toString(id);
+        Intent moveToTimer = new Intent(this, TimerActivity.class);
+        moveToTimer.putExtra("Index", index);
+        startActivity(moveToTimer);
     }
 
 
