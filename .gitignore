@@ -40,3 +40,4 @@ build/
 .idea/workspace.xml
 *.lock
 .gradle/2.1/taskArtifacts/cache.properties.lock
+*.properties
