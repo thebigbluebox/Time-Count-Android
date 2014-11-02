@@ -53,16 +53,22 @@ public class TimerActivity extends Activity {
     private Calendar startDate;
     private Calendar endDate;
     private String index = "";
+    private String title = "New";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_timer);
-        Bundle extras = getIntent().getExtras();
+        Intent extras = getIntent();
 
         if (extras != null) { //intent was sent properly with index info
-            index = extras.getString("Index"); //get index info from the intent
+            index = extras.getStringExtra(MainActivity.EXTRA_INDEX); //get index info from the intent
+            title = extras.getStringExtra(MainActivity.EXTRA_TITLE);
+
         }
         Log.d("Console",index);
+        TextView titleView = (TextView)findViewById(R.id.textView);
+        titleView.setText(title);
+
         timerValue = (TextView) findViewById(R.id.timerValue);
 
         startButton = (Button) findViewById(R.id.startButton);

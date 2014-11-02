@@ -1,17 +1,14 @@
 package com.datify.counter.myapplication;
 
-import android.app.Activity;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Debug;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -27,7 +24,6 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.CoreProtocolPNames;
 import org.apache.http.params.HttpParams;
-import org.w3c.dom.Text;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -96,7 +92,8 @@ public class MainActivity extends ListActivity {
             return true;
         }
     }
-
+    public final static String EXTRA_TITLE = "com.datify.counter.myapplication.TITLE";
+    public final static String EXTRA_INDEX = "com.datify.counter.myapplication.INDEX";
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
         String item = (String) getListAdapter().getItem(position);
@@ -105,10 +102,11 @@ public class MainActivity extends ListActivity {
         //Log.d("Console", "Before currentDate string");
         //Log.d("Console", currentDate.getTime().toString());
         //new MyHttpPost().execute();
-
         String index = Long.toString(id);
         Intent moveToTimer = new Intent(this, TimerActivity.class);
-        moveToTimer.putExtra("Index", index);
+        moveToTimer.putExtra(EXTRA_INDEX, index);
+        moveToTimer.putExtra(EXTRA_TITLE, item);
+
         startActivity(moveToTimer);
     }
 
