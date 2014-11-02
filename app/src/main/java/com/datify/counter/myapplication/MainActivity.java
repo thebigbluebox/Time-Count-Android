@@ -10,7 +10,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpVersion;
@@ -29,7 +28,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.Objects;
 
 
 public class MainActivity extends ListActivity {
@@ -97,7 +95,7 @@ public class MainActivity extends ListActivity {
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
         String item = (String) getListAdapter().getItem(position);
-        Toast.makeText(this, item + " selected", Toast.LENGTH_LONG).show();
+//        Toast.makeText(this, item + " selected", Toast.LENGTH_LONG).show();
         currentDate = Calendar.getInstance();
         //Log.d("Console", "Before currentDate string");
         //Log.d("Console", currentDate.getTime().toString());
